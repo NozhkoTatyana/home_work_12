@@ -4,7 +4,6 @@ from pprintpp import pprint as pp
 
 awards_list = []
 title_f = ''
-t=[]
 for i in films_awards:
     for j in i['results']:
         title_f = j['movie']['title'].replace(' ', '_').replace(':', '')
