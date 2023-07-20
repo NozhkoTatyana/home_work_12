@@ -1,6 +1,10 @@
 import os
 from tree_file import films_titles
 from create_award_films import awards
+import json
+from genres_film import *
+from pprint import pprint
+import csv
 
 
 def create_tree_dirs():
@@ -39,4 +43,33 @@ def create_tree_dirs():
                     file_award.write(j['award'] + '\n')
 
 
-create_tree_dirs()
+#create_tree_dirs()
+
+
+dict_genres = json.loads(genres)
+create_genres_dir = [(os.makedirs(*genre.values(), exist_ok=True), *genre.values()) for genre in dict_genres['results']]
+title_genres_dir = [create_genres_dir[i][1] for i in range(len(create_genres_dir))]
+
+film_info = []
+title_genre = []
+
+for i in films_data:
+    film_info.append({
+        'title': i['title'],
+        'year': i['year'],
+        'rating': i['rating'],
+        'type': i['type'],
+        'genres': [g['genre'] for g in i['gen']]
+    })
+
+for t in title_genres_dir:
+    with open(os.path.join(t, t + '_film_info.csv'), 'w', newline='', encoding='utf-8') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['title', 'year', 'rating', 'type', 'genres'])
+        for f in film_info:
+            for g in f['genres']:
+                if g in os.path.join(t, 'film_info.csv'):
+                    writer.writerow(f.values())
+
+
+
