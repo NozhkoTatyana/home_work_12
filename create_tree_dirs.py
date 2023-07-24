@@ -70,6 +70,3 @@ for t in title_genres_dir:
             for g in f['genres']:
                 if g in os.path.join(t, 'film_info.csv'):
                     writer.writerow(f.values())
-
-
-
