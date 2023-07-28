@@ -45,6 +45,7 @@ class Playlist:
         for all_films in data:
             if '2022' in all_films:
                 films_2022 = all_films
+                #print(films_2022)
                 if "Безкоштовно" in films_2022:
                     films_2022_free = films_2022[films_2022.find('https'): films_2022.find('html') + 4]
                     url = films_2022_free
@@ -52,7 +53,6 @@ class Playlist:
                     py_wpage = requests.get(url, headers=py_headers)
                     py_soup = BeautifulSoup(py_wpage.content, "html.parser")
                     self.like = py_soup.find("button", class_="vote-button is-like").find('span').text[:-4]
-                    films_2022_is_like = []
                     if int(self.like) > 0:
                         file = open('to_watch_in_the_evening.txt', 'w', encoding='utf-8')
                         file.write(films_2022)
@@ -61,15 +61,17 @@ class Playlist:
 
 class Player:
 
-    def __init__(self, link, title, time=datetime.now().minute):
-        self.link = link
+    def __init__(self, title, link, time=datetime.now().minute):
         self.title = title
+        self.link = link
         self.time = time
 
     def play(self):
         with open('to_watch_in_the_evening.txt', 'r') as f:
             film = f.read()
         if self.title in film:
+            return f'Фільм {self.title} доступний за посиланням {self.link}'
+        elif self.title not in film:
             return f'Фільм {self.title} доступний за посиланням {self.link}'
 
     def pause(self):
@@ -81,11 +83,9 @@ playlist = Playlist()
 playlist.search_film()
 playlist.add_film_favorites()
 
-player1 = Player('Гра тіней', 'https://megogo.net/ua/view/17367115-gra-tiney.html')
+player1 = Player('Щедрик', 'https://megogo.net/ua/view/20629396-shchedrik.html')
+player2 = Player('Гра тіней', 'https://megogo.net/ua/view/17367115-gra-tiney.html')
 print(player1.play())
 print(player1.pause())
-
-
-
-
-
+# print(player2.play())
+# print(player2.pause())
