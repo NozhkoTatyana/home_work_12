@@ -30,5 +30,3 @@ film1 = Film('Oscar', "A changes dramatically when his wife asks him for a divor
 film.upload_file()
 print(film.get_film_address())
 film1.upload_file()
-
-
