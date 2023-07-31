@@ -60,12 +60,10 @@ class MarauderMap(MapMagic):
     def __init__(self, path):
         super().__init__()
         self.path = path
-        self.get_map_open()
-        self.map_generator()
-        self.get_map_close()
 
     def map_generator(self):
 
+        self.get_map_open()
         awards = create_awards_list(self.path)
         dir_main = 'Harry_Potter'
         titles = self.get_films_titles()
@@ -104,5 +102,8 @@ class MarauderMap(MapMagic):
                             j['title_film'] == i[(len(dir_main)):i.rfind('\\') - 2].replace('/', ''):
                         file_award.write(j['award'] + '\n')
 
+        self.get_map_close()
+
 
 map = MarauderMap('films_awards.json')
+map.map_generator()
