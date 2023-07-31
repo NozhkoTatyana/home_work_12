@@ -1,14 +1,16 @@
 import os
 from tree_file import films_titles
-from create_award_films import awards
+from create_award_films import create_awards_list
 import json
 from genres_film import *
-from pprint import pprint
 import csv
 
 
 def create_tree_dirs():
     dir_main = 'Harry_Potter'
+    path_json = 'films1_awards.json'
+    awards = create_awards_list(path_json)
+
     if not os.path.exists(dir_main):
         os.mkdir(dir_main)
         print("Створена директорія")
@@ -25,7 +27,7 @@ def create_tree_dirs():
 
     os.chdir('..')
     path_sub_list = []
-    y = []
+
     for title in title_film:
         for i in range(ord('A'), ord('Z')):
             path_sub_dir = dir_main + '/' + title + '/' + chr(i)
@@ -43,30 +45,30 @@ def create_tree_dirs():
                     file_award.write(j['award'] + '\n')
 
 
-#create_tree_dirs()
+create_tree_dirs()
 
 
-dict_genres = json.loads(genres)
-create_genres_dir = [(os.makedirs(*genre.values(), exist_ok=True), *genre.values()) for genre in dict_genres['results']]
-title_genres_dir = [create_genres_dir[i][1] for i in range(len(create_genres_dir))]
+def create_tree_film_dirs():
+    dict_genres = json.loads(genres)
+    create_genres_dir = [(os.makedirs(*genre.values(), exist_ok=True), *genre.values()) for genre in dict_genres['results']]
+    title_genres_dir = [create_genres_dir[i][1] for i in range(len(create_genres_dir))]
 
-film_info = []
-title_genre = []
+    film_info = []
 
-for i in films_data:
-    film_info.append({
-        'title': i['title'],
-        'year': i['year'],
-        'rating': i['rating'],
-        'type': i['type'],
-        'genres': [g['genre'] for g in i['gen']]
-    })
+    for i in films_data:
+        film_info.append({
+            'title': i['title'],
+            'year': i['year'],
+            'rating': i['rating'],
+            'type': i['type'],
+            'genres': [g['genre'] for g in i['gen']]
+        })
 
-for t in title_genres_dir:
-    with open(os.path.join(t, t + '_film_info.csv'), 'w', newline='', encoding='utf-8') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(['title', 'year', 'rating', 'type', 'genres'])
-        for f in film_info:
-            for g in f['genres']:
-                if g in os.path.join(t, 'film_info.csv'):
-                    writer.writerow(f.values())
+    for t in title_genres_dir:
+        with open(os.path.join(t, t + '_film_info.csv'), 'w', newline='', encoding='utf-8') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(['title', 'year', 'rating', 'type', 'genres'])
+            for f in film_info:
+                for g in f['genres']:
+                    if g in os.path.join(t, 'film_info.csv'):
+                        writer.writerow(f.values())
